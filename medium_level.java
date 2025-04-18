@@ -5,20 +5,16 @@ public class MediumLevelCRUD {
     static final String url = "jdbc:mysql://localhost:3306/Inventory";
     static final String user = "root";
     static final String password = "your_password_here";
-
     public static void main(String[] args) {
         try (Connection con = DriverManager.getConnection(url, user, password);
              Scanner sc = new Scanner(System.in)) {
-
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con.setAutoCommit(false); // Begin transaction
+            con.setAutoCommit(false); 
             int choice;
-
             do {
                 System.out.println("\n1. Insert\n2. View\n3. Update\n4. Delete\n5. Exit");
                 System.out.print("Enter choice: ");
                 choice = sc.nextInt();
-
                 switch (choice) {
                     case 1 -> insertProduct(con, sc);
                     case 2 -> viewProducts(con);
@@ -27,18 +23,14 @@ public class MediumLevelCRUD {
                     case 5 -> System.out.println("Exiting...");
                     default -> System.out.println("Invalid choice.");
                 }
-
             } while (choice != 5);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     static void insertProduct(Connection con, Scanner sc) {
         try (PreparedStatement ps = con.prepareStatement(
                 "INSERT INTO Product VALUES (?, ?, ?, ?)")) {
-
             System.out.print("Enter ProductID: ");
             int id = sc.nextInt();
             sc.nextLine();
@@ -97,7 +89,6 @@ public class MediumLevelCRUD {
 
             if (rows > 0) System.out.println("Product updated.");
             else System.out.println("Product not found.");
-
         } catch (Exception e) {
             try {
                 con.rollback();
@@ -107,17 +98,14 @@ public class MediumLevelCRUD {
             System.out.println("Error updating product.");
         }
     }
-
     static void deleteProduct(Connection con, Scanner sc) {
         try (PreparedStatement ps = con.prepareStatement(
                 "DELETE FROM Product WHERE ProductID = ?")) {
-
             System.out.print("Enter ProductID to delete: ");
             int id = sc.nextInt();
             ps.setInt(1, id);
             int rows = ps.executeUpdate();
             con.commit();
-
             if (rows > 0) System.out.println("Product deleted.");
             else System.out.println("Product not found.");
 
